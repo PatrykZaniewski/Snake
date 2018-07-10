@@ -1,33 +1,25 @@
 package sample;
 
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.util.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class feedSnake {
 
     private ArrayList<Pair<Color, Pair<Integer, Integer>>> lista;
+    public addNew add;
 
-    public feedSnake (ArrayList<Pair<Color, Pair<Integer, Integer>>> lista)
+    public feedSnake (ArrayList<Pair<Color, Pair<Integer, Integer>>> lista, addNew add)
     {
         this.lista = lista;
+        this.add= add;
     }
 
-    public void checkIfContains(int x, int y)
+    private void checkIfContains(int x, int y)
     {
         if(lista.contains(new Pair<>(Color.RED, new Pair<>(x, y))))
         {
@@ -42,11 +34,11 @@ public class feedSnake {
         }
         else
         {
-
+            add.addCord(Color.RED, x, y);
         }
     }
 
-    public void checkIfInside(int x, int y, Canvas playgroundC)
+    public addNew checkIfInside(int x, int y, Canvas playgroundC)
     {
         WritableImage wi = new WritableImage(400,400);
         playgroundC.snapshot(null, wi);
@@ -54,6 +46,7 @@ public class feedSnake {
         {
             checkIfContains(x, y);
         }
+        return add;
     }
 
     public void go()

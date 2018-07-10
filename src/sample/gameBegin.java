@@ -23,46 +23,30 @@ public class gameBegin {
     @FXML
     public Canvas playgroundC;
     public static Stage firstStage;
+    private addNew add;
 
     private ArrayList <Pair<Color, Pair<Integer, Integer>>> lista;
 
     @FXML
     void initialize() {
-
+        add = new addNew();
         playgroundC.setOnKeyPressed(event -> {
-            moveImage move = new moveImage(lista, playgroundC);
+            moveImage move = new moveImage(lista, playgroundC, add);
 
             if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.DOWN || event.getCode()
                     == KeyCode.LEFT || event.getCode() == KeyCode.RIGHT) {
-                move.move(event.getCode());
+                add = move.move(event.getCode());
             }
-
         });
 
-        lista = new ArrayList<>();
-        GraphicsContext gc = playgroundC.getGraphicsContext2D();
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, 400, 400);
-        gc.setFill(Color.RED);
-        gc.fillRect(0, 0, 20, 20);
-        gc.fillRect(0, 20, 20, 20);
-        gc.fillRect(0, 40, 20, 20);
-        gc.fillRect(0, 60, 20, 20);
-        gc.strokeRect(0, 0, 20, 20);
-
-        lista.add(new Pair<>(Color.RED, new Pair<>(0, 60)));
-        lista.add(new Pair<>(Color.RED, new Pair<>(0, 40)));
-        lista.add(new Pair<>(Color.RED, new Pair<>(0, 20)));
-        lista.add(new Pair<>(Color.RED, new Pair<>(0, 0)));
-        playgroundC.setFocusTraversable(true);
-        playgroundC.requestFocus();
+        gameStart();
     }
 
     public gameBegin(Stage firstStage)
     {
-        this.firstStage = firstStage;
+        gameBegin.firstStage = firstStage;
     }
-    
+
     public gameBegin()
     {
 
@@ -70,15 +54,7 @@ public class gameBegin {
 
     public void gameStart()
     {
-        playgroundC.setOnKeyPressed(event -> {
-            moveImage move = new moveImage(lista, playgroundC);
 
-            if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.DOWN || event.getCode()
-                    == KeyCode.LEFT || event.getCode() == KeyCode.RIGHT) {
-                move.move(event.getCode());
-            }
-
-        });
         lista = new ArrayList<>();
         playgroundC.setStyle("-fx-background-color: black");
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
@@ -89,6 +65,10 @@ public class gameBegin {
         gc.fillRect(0, 20, 20, 20);
         gc.fillRect(0, 40, 20, 20);
         gc.fillRect(0, 60, 20, 20);
+        gc.fillRect(20, 160, 20, 20);
+
+        gc.fillRect(20, 120, 20, 20);
+
         gc.strokeRect(0, 0, 20, 20);
 
         lista.add(new Pair<>(Color.RED, new Pair<>(0, 60)));
