@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class feedSnake {
 
     private ArrayList<Pair<Color, Pair<Integer, Integer>>> lista;
-    public addNew add;
+    private addNew add;
 
     public feedSnake (ArrayList<Pair<Color, Pair<Integer, Integer>>> lista, addNew add)
     {
@@ -35,6 +35,7 @@ public class feedSnake {
         else
         {
             add.addCord(Color.RED, x, y);
+            points.increasePoints();
         }
     }
 
@@ -47,11 +48,5 @@ public class feedSnake {
             checkIfContains(x, y);
         }
         return add;
-    }
-
-    public void go()
-    {
-        gameBegin newGame = new gameBegin();
-        newGame.gameStart();
     }
 }

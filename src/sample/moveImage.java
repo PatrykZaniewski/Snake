@@ -5,6 +5,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 @SuppressWarnings("Duplicates")
@@ -13,12 +15,13 @@ public class moveImage {
 
     private ArrayList <Pair<Color, Pair<Integer, Integer>>> lista;
     private addNew add;
-    private int orientation;
+    private KeyCode orientation;
     private Canvas playgroundC;
     private int x, y;
     private Color c;
+    private gameBegin quit = new gameBegin();
 
-    public int getOrientation() {
+    public KeyCode getOrientation() {
         return orientation;
     }
 
@@ -31,6 +34,15 @@ public class moveImage {
 
     public addNew move(KeyCode key)
     {
+        x = lista.get(0).getValue().getKey();
+        y = lista.get(0).getValue().getValue();
+        if(lista.get(1).getValue().getKey().equals(x+20) && lista.get(1).getValue().getValue().equals(y)) orientation = KeyCode.RIGHT;
+        if(lista.get(1).getValue().getKey().equals(x-20) && lista.get(1).getValue().getValue().equals(y)) orientation = KeyCode.LEFT;
+        if(lista.get(1).getValue().getKey().equals(x) && lista.get(1).getValue().getValue().equals(y+20)) orientation = KeyCode.DOWN;
+        if(lista.get(1).getValue().getKey().equals(x) && lista.get(1).getValue().getValue().equals(y-20)) orientation = KeyCode.UP;
+
+        if(orientation == key)return add;
+
         Pair<Color, Pair<Integer, Integer>> pair = null;
         int currentPos = 0;
         int lastY = 0;
@@ -45,24 +57,55 @@ public class moveImage {
             switch (key)
             {
                 case UP:
-                    if(y - 20 < 0)y = 20;
+                    if(y - 20 < 0)
+                    {
+                        try {
+                            quit.quit();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     pair = moveUp(x, y, c);
                     lista.set(currentPos, new Pair<>(c, new Pair<>(x, y - 20)));
+                    orientation = KeyCode.UP;
                     break;
                 case DOWN:
-                    if(y + 20 > 380) y = 360;
+                    if(y + 20 > 380){
+                        try {
+                            quit.quit();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     pair = moveDown(x, y, c);
                     lista.set(currentPos, new Pair<>(c, new Pair<>(x, y + 20)));
+                    orientation = KeyCode.DOWN;
                     break;
                 case LEFT:
-                    if(x - 20 < 0) x = 20;
+                    if(x - 20 < 0){
+                        try {
+                            quit.quit();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
                     pair = moveLeft(x, y, c);
                     lista.set(currentPos, new Pair<>(c, new Pair<>(x - 20, y)));
+                    orientation = KeyCode.LEFT;
                     break;
                 case RIGHT:
-                    if(x + 20 > 380) x = 360;
+                    if(x + 20 > 380){
+                        try {
+                            quit.quit();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
                     pair = moveRight(x, y, c);
                     lista.set(currentPos, new Pair<>(c, new Pair<>(x + 20, y)));
+                    orientation = KeyCode.RIGHT;
                     break;
             }
             else
@@ -80,6 +123,8 @@ public class moveImage {
         if(pair != null)
         {
             lista.add(new Pair<> (pair.getKey(), new Pair <> (pair.getValue().getKey(), pair.getValue().getValue())));
+            gc.setFill(Color.RED);
+            gc.fillRect(pair.getValue().getKey(), pair.getValue().getValue(), 20, 20);
         }
         return add;
     }
@@ -87,29 +132,25 @@ public class moveImage {
     private Pair<Color, Pair<Integer, Integer>> moveRight(int x, int y, Color c)
     {
         feedSnake feed = new feedSnake(lista, add);
-        System.out.println(add.toString());
         add = feed.checkIfInside(x + 20, y, playgroundC);
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
         gc.setFill(c);
         gc.fillRect(x + 20, y, 20, 20);
         if(add.getAmount() != 0)
         {
-            System.out.println("zapisane");
             try {
                 Pair<Color, Pair<Integer, Integer>> pair = add.peekOne();
                 c = pair.getKey();
                 x = pair.getValue().getKey();
                 y = pair.getValue().getValue();
-                //System.out.print(x);
-                //System.out.println(lista.get(lista.size()-1).getValue().getKey());
-                //if(lista.get(lista.size()-1).getValue().getKey().equals(x))System.out.print("Lewa");
-                  //  if( lista.get(lista.size()-1).getValue().getValue().equals(y))System.out.print("prawa");
-                /*{
+
+                if(lista.get(lista.size()-1).getValue().getKey().equals(x) && lista.get(lista.size()-1).getValue().getValue().equals(y))
+                {
                     add.removeOne();
                     gc.setFill(c);
                     gc.fillRect(x, y, 20, 20);
                     return pair;
-                }*/
+                }
             }
             catch (NullPointerException e)
             {
@@ -126,15 +167,14 @@ public class moveImage {
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
         gc.setFill(c);
         gc.fillRect(x - 20, y, 20, 20);
-        if(add != null)
+        if(add.getAmount() != 0)
         {
             try {
                 Pair<Color, Pair<Integer, Integer>> pair = add.peekOne();
                 c = pair.getKey();
                 x = pair.getValue().getKey();
                 y = pair.getValue().getValue();
-
-                if(!lista.contains(new Pair<>(Color.RED, new Pair<>(x, y))))
+                if(lista.get(lista.size()-1).getValue().getKey().equals(x) && lista.get(lista.size()-1).getValue().getValue().equals(y))
                 {
                     add.removeOne();
                     gc.setFill(c);
@@ -157,7 +197,7 @@ public class moveImage {
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
         gc.setFill(c);
         gc.fillRect(x, y - 20, 20, 20);
-        if(add != null)
+        if(add.getAmount() != 0)
         {
             try {
                 Pair<Color, Pair<Integer, Integer>> pair = add.peekOne();
@@ -165,7 +205,7 @@ public class moveImage {
                 x = pair.getValue().getKey();
                 y = pair.getValue().getValue();
 
-                if(!lista.contains(new Pair<>(Color.RED, new Pair<>(x, y))))
+                if(lista.get(lista.size()-1).getValue().getKey().equals(x) && lista.get(lista.size()-1).getValue().getValue().equals(y))
                 {
                     add.removeOne();
                     gc.setFill(c);
@@ -188,7 +228,7 @@ public class moveImage {
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
         gc.setFill(c);
         gc.fillRect(x, y + 20, 20, 20);
-        if(add != null)
+        if(add.getAmount() != 0)
         {
             try {
                 Pair<Color, Pair<Integer, Integer>> pair = add.peekOne();
@@ -196,7 +236,7 @@ public class moveImage {
                 x = pair.getValue().getKey();
                 y = pair.getValue().getValue();
 
-                if(!lista.contains(new Pair<>(Color.RED, new Pair<>(x, y))))
+                if(lista.get(lista.size()-1).getValue().getKey().equals(x) && lista.get(lista.size()-1).getValue().getValue().equals(y))
                 {
                     add.removeOne();
                     gc.setFill(c);

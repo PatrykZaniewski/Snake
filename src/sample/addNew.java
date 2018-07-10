@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
@@ -9,7 +8,6 @@ import java.util.Queue;
 
 public class addNew {
 
-    public Canvas playgroundC;
     private Queue<Pair<Color, Pair<Integer, Integer>>> lista;
     private int amount = 0;
     public int test = 0;
@@ -42,11 +40,6 @@ public class addNew {
     public Pair<Color, Pair<Integer, Integer>> get ()
     {
         return lista.remove();
-    }
-
-    public int getSize()
-    {
-        return lista.size();
     }
 
     public Pair<Color, Pair<Integer, Integer>> peekOne()

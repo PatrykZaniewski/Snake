@@ -13,9 +13,14 @@ import java.io.IOException;
 public class endGame {
     public Label scoreLB;
 
+    public void initialize()
+    {
+        scoreLB.setText(String.valueOf(points.getPoints()));
+    }
+
     public void onRestart(ActionEvent actionEvent) throws IOException {
         Stage primaryStage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
         primaryStage.setTitle("Promotech Snake");
         primaryStage.setScene(new Scene(root, 400, 400));
         primaryStage.setResizable(false);

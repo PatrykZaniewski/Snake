@@ -2,7 +2,6 @@ package sample;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -24,11 +23,13 @@ public class gameBegin {
     public Canvas playgroundC;
     public static Stage firstStage;
     private addNew add;
+    private KeyCode key;
 
     private ArrayList <Pair<Color, Pair<Integer, Integer>>> lista;
 
     @FXML
     void initialize() {
+        points.setZeroPoints();
         add = new addNew();
         playgroundC.setOnKeyPressed(event -> {
             moveImage move = new moveImage(lista, playgroundC, add);
@@ -38,7 +39,6 @@ public class gameBegin {
                 add = move.move(event.getCode());
             }
         });
-
         gameStart();
     }
 
@@ -54,7 +54,6 @@ public class gameBegin {
 
     public void gameStart()
     {
-
         lista = new ArrayList<>();
         playgroundC.setStyle("-fx-background-color: black");
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
@@ -64,14 +63,15 @@ public class gameBegin {
         gc.fillRect(0, 0, 20, 20);
         gc.fillRect(0, 20, 20, 20);
         gc.fillRect(0, 40, 20, 20);
-        gc.fillRect(0, 60, 20, 20);
-        gc.fillRect(20, 160, 20, 20);
 
+        gc.setFill(Color.YELLOW);
+        gc.fillRect(0, 60, 20, 20);
+
+        gc.setFill(Color.RED);
+        gc.fillRect(20, 60, 20, 20);
         gc.fillRect(20, 120, 20, 20);
 
-        gc.strokeRect(0, 0, 20, 20);
-
-        lista.add(new Pair<>(Color.RED, new Pair<>(0, 60)));
+        lista.add(new Pair<>(Color.YELLOW, new Pair<>(0, 60)));
         lista.add(new Pair<>(Color.RED, new Pair<>(0, 40)));
         lista.add(new Pair<>(Color.RED, new Pair<>(0, 20)));
         lista.add(new Pair<>(Color.RED, new Pair<>(0, 0)));
@@ -88,4 +88,7 @@ public class gameBegin {
         firstStage.hide();
     }
 
+    public void setKey(KeyCode key) {
+        this.key = key;
+    }
 }
