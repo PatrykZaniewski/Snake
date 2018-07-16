@@ -34,8 +34,10 @@ public class moveImage {
 
     public addNew move(KeyCode key)
     {
+        System.out.println("A");
         x = lista.get(0).getValue().getKey();
         y = lista.get(0).getValue().getValue();
+        System.out.println("B");
         if(lista.get(1).getValue().getKey().equals(x+20) && lista.get(1).getValue().getValue().equals(y)) orientation = KeyCode.RIGHT;
         if(lista.get(1).getValue().getKey().equals(x-20) && lista.get(1).getValue().getValue().equals(y)) orientation = KeyCode.LEFT;
         if(lista.get(1).getValue().getKey().equals(x) && lista.get(1).getValue().getValue().equals(y+20)) orientation = KeyCode.DOWN;
@@ -48,6 +50,7 @@ public class moveImage {
         int lastY = 0;
         int lastX = 0;
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
+
 
         for (Pair<Color, Pair<Integer, Integer>> iterLista : lista) {
             x = iterLista.getValue().getKey();

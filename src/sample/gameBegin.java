@@ -23,20 +23,26 @@ public class gameBegin {
     public Canvas playgroundC;
     public static Stage firstStage;
     private addNew add;
-    private KeyCode key;
+    public KeyCode direction = KeyCode.DOWN;
+    public autoMove auto;
 
     private ArrayList <Pair<Color, Pair<Integer, Integer>>> lista;
 
     @FXML
     void initialize() {
         points.setZeroPoints();
-        add = new addNew();
+
         playgroundC.setOnKeyPressed(event -> {
             moveImage move = new moveImage(lista, playgroundC, add);
-
             if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.DOWN || event.getCode()
                     == KeyCode.LEFT || event.getCode() == KeyCode.RIGHT) {
+                /*add =  auto.getAdd();
+                lista = auto.getLista();
+                playgroundC = auto.getPlaygroundC();
+                direction = event.getCode();
+                auto.setKey(direction);*/
                 add = move.move(event.getCode());
+
             }
         });
         gameStart();
@@ -54,6 +60,11 @@ public class gameBegin {
 
     public void gameStart()
     {
+
+        add = new addNew();
+        auto = new autoMove(lista, playgroundC, add, direction);
+//        auto.start();
+
         lista = new ArrayList<>();
         playgroundC.setStyle("-fx-background-color: black");
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
@@ -86,9 +97,5 @@ public class gameBegin {
         stage.setResizable(false);
         stage.show();
         firstStage.hide();
-    }
-
-    public void setKey(KeyCode key) {
-        this.key = key;
     }
 }
