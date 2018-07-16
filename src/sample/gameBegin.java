@@ -24,12 +24,12 @@ public class gameBegin {
     public static Stage firstStage;
     private addNew add;
     public KeyCode direction = KeyCode.DOWN;
-    public autoMove auto;
-
+    private moveImage move;
     private ArrayList <Pair<Color, Pair<Integer, Integer>>> lista;
 
+
     @FXML
-    void initialize() {
+    void initialize() throws InterruptedException {
         points.setZeroPoints();
 
         playgroundC.setOnKeyPressed(event -> {
@@ -58,12 +58,9 @@ public class gameBegin {
 
     }
 
-    public void gameStart()
-    {
+    public void gameStart() throws InterruptedException {
 
         add = new addNew();
-        auto = new autoMove(lista, playgroundC, add, direction);
-//        auto.start();
 
         lista = new ArrayList<>();
         playgroundC.setStyle("-fx-background-color: black");
@@ -79,15 +76,29 @@ public class gameBegin {
         gc.fillRect(0, 60, 20, 20);
 
         gc.setFill(Color.RED);
-        gc.fillRect(20, 60, 20, 20);
-        gc.fillRect(20, 120, 20, 20);
-
+        randomPoint.random();
+        while(lista.contains(new Pair<>(Color.RED, new Pair<>(randomPoint.getX(), randomPoint.getY()))))
+        {
+            randomPoint.random();
+        }
+        gc.fillRect(randomPoint.x, randomPoint.y, 20, 20);
         lista.add(new Pair<>(Color.YELLOW, new Pair<>(0, 60)));
         lista.add(new Pair<>(Color.RED, new Pair<>(0, 40)));
         lista.add(new Pair<>(Color.RED, new Pair<>(0, 20)));
         lista.add(new Pair<>(Color.RED, new Pair<>(0, 0)));
         playgroundC.setFocusTraversable(true);
         playgroundC.requestFocus();
+
+       /* Runnable auto = new Runnable() {
+            @Override
+            public void run() {
+                moveImage move = new moveImage(lista, playgroundC, add);
+                move.move(direction);
+            }
+        };
+
+        Thread thread = new Thread(auto);
+        thread.start();*/
     }
 
     public void quit() throws IOException {

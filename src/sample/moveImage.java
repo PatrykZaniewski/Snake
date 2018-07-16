@@ -34,17 +34,14 @@ public class moveImage {
 
     public addNew move(KeyCode key)
     {
-        System.out.println("A");
         x = lista.get(0).getValue().getKey();
         y = lista.get(0).getValue().getValue();
-        System.out.println("B");
         if(lista.get(1).getValue().getKey().equals(x+20) && lista.get(1).getValue().getValue().equals(y)) orientation = KeyCode.RIGHT;
         if(lista.get(1).getValue().getKey().equals(x-20) && lista.get(1).getValue().getValue().equals(y)) orientation = KeyCode.LEFT;
         if(lista.get(1).getValue().getKey().equals(x) && lista.get(1).getValue().getValue().equals(y+20)) orientation = KeyCode.DOWN;
         if(lista.get(1).getValue().getKey().equals(x) && lista.get(1).getValue().getValue().equals(y-20)) orientation = KeyCode.UP;
 
         if(orientation == key)return add;
-
         Pair<Color, Pair<Integer, Integer>> pair = null;
         int currentPos = 0;
         int lastY = 0;
@@ -226,8 +223,10 @@ public class moveImage {
 
     private Pair<Color, Pair<Integer, Integer>> moveDown(int x, int y, Color c)
     {
+
         feedSnake feed = new feedSnake(lista, add);
         add = feed.checkIfInside(x, y + 20, playgroundC);
+
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
         gc.setFill(c);
         gc.fillRect(x, y + 20, 20, 20);
