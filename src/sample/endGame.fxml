@@ -9,7 +9,7 @@
    <children>
       <Button mnemonicParsing="false" onAction="#onExit" prefHeight="27.0" prefWidth="100.0" text="Exit" />
       <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#onRestart" prefHeight="27.0" prefWidth="100.0" text="Restart" />
-      <Label text="Your score:" />
+      <Label text="Score(BENIZ :-DDDDDDD):" />
       <Label fx:id="scoreLB" text="Label">
          <font>
             <Font size="20.0" />
