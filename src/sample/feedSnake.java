@@ -2,19 +2,16 @@ package sample;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class feedSnake {
 
     private ArrayList<Pair<Color, Pair<Integer, Integer>>> lista;
     private addNew add;
-    private int feedX;
-    private int feedY;
+
 
     public feedSnake (ArrayList<Pair<Color, Pair<Integer, Integer>>> lista, addNew add)
     {
@@ -22,20 +19,13 @@ public class feedSnake {
         this.add= add;
     }
 
-    private void checkIfContains(int x, int y, Canvas playgroundC)
+    public synchronized addNew checkIfInside(int x, int y, Canvas playgroundC)
     {
-        if(lista.contains(new Pair<>(Color.RED, new Pair<>(x, y))))
+        if(lista.contains(new Pair<>(Color.RED, new Pair<>(x, y))) || x == 420 || y == 420)
         {
-            gameBegin quit = new gameBegin();
-            try {
-                quit.quit();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
+            gameBegin.endGame = true;
         }
-        else
+        else if (x == randomPoint.getX() && y == randomPoint.getY())
         {
             add.addCord(Color.RED, x, y);
             GraphicsContext gc = playgroundC.getGraphicsContext2D();
@@ -52,27 +42,6 @@ public class feedSnake {
             gc.fillRect(posX, posY, 20, 20);
             points.increasePoints();
         }
-    }
-
-
-
-    public synchronized addNew checkIfInside(int x, int y, Canvas playgroundC)
-    {
-        if(lista.contains(new Pair<>(Color.RED, new Pair<>(x, y))))
-        {
-            try {
-                gameBegin quit = new gameBegin();
-                quit.quit();
-            }
-            catch (IOException e)
-            {}
-        }
-
-        if(x == randomPoint.getX() && y == randomPoint.getY())
-        {
-            checkIfContains(x, y, playgroundC);
-        }
-
         return add;
     }
 }

@@ -6,7 +6,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 @SuppressWarnings("Duplicates")
@@ -19,11 +18,6 @@ public class moveImage {
     private Canvas playgroundC;
     private int x, y;
     private Color c;
-    private gameBegin quit = new gameBegin();
-
-    public KeyCode getOrientation() {
-        return orientation;
-    }
 
     public moveImage(ArrayList <Pair<Color, Pair<Integer, Integer>>> lista, Canvas playgroundC, addNew add)
     {
@@ -59,51 +53,41 @@ public class moveImage {
                 case UP:
                     if(y - 20 < 0)
                     {
-                        try {
-                            quit.quit();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        gameBegin.endGame = true;
+                        return null;
                     }
                     pair = moveUp(x, y, c);
+                    if(gameBegin.endGame)return null;
                     lista.set(currentPos, new Pair<>(c, new Pair<>(x, y - 20)));
                     orientation = KeyCode.UP;
                     break;
                 case DOWN:
                     if(y + 20 > 380){
-                        try {
-                            quit.quit();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        gameBegin.endGame = true;
+                        return null;
                     }
                     pair = moveDown(x, y, c);
+                    if(gameBegin.endGame)return null;
                     lista.set(currentPos, new Pair<>(c, new Pair<>(x, y + 20)));
                     orientation = KeyCode.DOWN;
                     break;
                 case LEFT:
                     if(x - 20 < 0){
-                        try {
-                            quit.quit();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        gameBegin.endGame = true;
                         return null;
                     }
                     pair = moveLeft(x, y, c);
+                    if(gameBegin.endGame)return null;
                     lista.set(currentPos, new Pair<>(c, new Pair<>(x - 20, y)));
                     orientation = KeyCode.LEFT;
                     break;
                 case RIGHT:
                     if(x + 20 > 380){
-                        try {
-                            quit.quit();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        gameBegin.endGame = true;
                         return null;
                     }
                     pair = moveRight(x, y, c);
+                    if(gameBegin.endGame)return null;
                     lista.set(currentPos, new Pair<>(c, new Pair<>(x + 20, y)));
                     orientation = KeyCode.RIGHT;
                     break;
@@ -133,6 +117,7 @@ public class moveImage {
     {
         feedSnake feed = new feedSnake(lista, add);
         add = feed.checkIfInside(x + 20, y, playgroundC);
+        if(gameBegin.endGame)return null;
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
         gc.setFill(c);
         gc.fillRect(x + 20, y, 20, 20);
@@ -164,6 +149,7 @@ public class moveImage {
     {
         feedSnake feed = new feedSnake(lista, add);
         add = feed.checkIfInside(x - 20, y, playgroundC);
+        if(gameBegin.endGame)return null;
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
         gc.setFill(c);
         gc.fillRect(x - 20, y, 20, 20);
@@ -194,6 +180,7 @@ public class moveImage {
     {
         feedSnake feed = new feedSnake(lista, add);
         add = feed.checkIfInside(x, y - 20, playgroundC);
+        if(gameBegin.endGame)return null;
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
         gc.setFill(c);
         gc.fillRect(x, y - 20, 20, 20);
@@ -223,10 +210,9 @@ public class moveImage {
 
     private Pair<Color, Pair<Integer, Integer>> moveDown(int x, int y, Color c)
     {
-
         feedSnake feed = new feedSnake(lista, add);
         add = feed.checkIfInside(x, y + 20, playgroundC);
-
+        if(gameBegin.endGame)return null;
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
         gc.setFill(c);
         gc.fillRect(x, y + 20, 20, 20);

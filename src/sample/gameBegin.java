@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,28 +22,26 @@ public class gameBegin {
     public Pane backgroundP;
     @FXML
     public Canvas playgroundC;
+    @FXML
     public static Stage firstStage;
     private addNew add;
     public KeyCode direction = KeyCode.DOWN;
     private moveImage move;
     private ArrayList <Pair<Color, Pair<Integer, Integer>>> lista;
+    public static boolean endGame = false;
 
 
     @FXML
-    void initialize() throws InterruptedException {
+    void initialize() {
         points.setZeroPoints();
-
         playgroundC.setOnKeyPressed(event -> {
-            moveImage move = new moveImage(lista, playgroundC, add);
             if (event.getCode() == KeyCode.UP || event.getCode() == KeyCode.DOWN || event.getCode()
                     == KeyCode.LEFT || event.getCode() == KeyCode.RIGHT) {
-                /*add =  auto.getAdd();
-                lista = auto.getLista();
-                playgroundC = auto.getPlaygroundC();
-                direction = event.getCode();
-                auto.setKey(direction);*/
-                add = move.move(event.getCode());
-
+                if(event.getCode() == KeyCode.UP && direction == KeyCode.DOWN);
+                else if(event.getCode() == KeyCode.DOWN && direction == KeyCode.UP);
+                else if(event.getCode() == KeyCode.LEFT && direction == KeyCode.RIGHT);
+                else if(event.getCode() == KeyCode.RIGHT && direction == KeyCode.LEFT);
+                else direction = event.getCode();
             }
         });
         gameStart();
@@ -58,22 +57,20 @@ public class gameBegin {
 
     }
 
-    public void gameStart() throws InterruptedException {
-
+    public void gameStart() {
+        endGame = false;
         add = new addNew();
-
         lista = new ArrayList<>();
         playgroundC.setStyle("-fx-background-color: black");
+        moveImage move = new moveImage(lista, playgroundC, add);
         GraphicsContext gc = playgroundC.getGraphicsContext2D();
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, 400, 400);
         gc.setFill(Color.RED);
-        gc.fillRect(0, 0, 20, 20);
-        gc.fillRect(0, 20, 20, 20);
-        gc.fillRect(0, 40, 20, 20);
+        gc.fillRect(180, 180, 20, 20);
 
         gc.setFill(Color.YELLOW);
-        gc.fillRect(0, 60, 20, 20);
+        gc.fillRect(180, 160, 20, 20);
 
         gc.setFill(Color.RED);
         randomPoint.random();
@@ -81,27 +78,40 @@ public class gameBegin {
         {
             randomPoint.random();
         }
+
         gc.fillRect(randomPoint.x, randomPoint.y, 20, 20);
-        lista.add(new Pair<>(Color.YELLOW, new Pair<>(0, 60)));
-        lista.add(new Pair<>(Color.RED, new Pair<>(0, 40)));
-        lista.add(new Pair<>(Color.RED, new Pair<>(0, 20)));
-        lista.add(new Pair<>(Color.RED, new Pair<>(0, 0)));
+        lista.add(new Pair<>(Color.YELLOW, new Pair<>(180, 180)));
+        lista.add(new Pair<>(Color.RED, new Pair<>(180, 160)));
         playgroundC.setFocusTraversable(true);
         playgroundC.requestFocus();
 
-       /* Runnable auto = new Runnable() {
+        Thread thread = new Thread() {
             @Override
-            public void run() {
-                moveImage move = new moveImage(lista, playgroundC, add);
-                move.move(direction);
+            public synchronized void run() {
+                while(!endGame) {
+                    add = move.move(direction);
+                    try {
+                        sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Platform.runLater(()->{
+                    try {
+                        quit();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         };
-
-        Thread thread = new Thread(auto);
-        thread.start();*/
+        thread.setDaemon(true);
+        thread.start();
     }
 
-    public void quit() throws IOException {
+    public synchronized void quit() throws IOException {
+
+
         Parent DesignerSceneParent = FXMLLoader.load(getClass().getResource("endGame.fxml"));
         Stage stage = new Stage();
         stage.setScene(new Scene(DesignerSceneParent, 100, 125));
